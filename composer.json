@@ -1,0 +1,32 @@
+{
+    "name": "broken-titan/laravel-channel-klaviyo",
+    "description": "Klaviyo notification channel for Laravel.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marshall Miller",
+            "email": "contact@marshall-miller.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "illuminate/notifications": "^5.8 || ^6.0 || ^7.0",
+        "illuminate/support": "^5.8 || ^6.0 || ^7.0",
+        "illuminate/events": "^5.8 || ^6.0 || ^7.0",
+        "illuminate/queue": "^5.8 || ^6.0 || ^7.0",
+        "klaviyo/php-sdk": "^1.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BrokenTitan\\Klaviyo\\Providers\\KlaviyoServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "BrokenTitan\\Klaviyo\\": "src"
+        }
+    }
+}
