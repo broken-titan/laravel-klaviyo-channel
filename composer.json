@@ -1,5 +1,5 @@
 {
-    "name": "broken-titan/laravel-channel-klaviyo",
+    "name": "broken-titan/laravel-klaviyo-channel",
     "description": "Klaviyo notification channel for Laravel.",
     "type": "library",
     "license": "MIT",
