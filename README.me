@@ -1,0 +1,90 @@
+## Laravel Klaviyo Notification Channel
+
+This package makes it easy to integrate Laravel with Klaviyo for sending notifications. It is targeted towards v1 of the Klaviyo API, since the v2 PHP SDK is not yet mature/working.
+
+## Contents
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Testing](#testing)
+- [Security](#security)
+- [Contributing](#contributing)
+- [Credits](#credits)
+- [License](#license)
+
+
+## Installation
+
+Install this package with Composer:
+
+    composer require broken-titan/laravel-klayiyo-channel
+
+## Configuration
+
+Before you may begin using the Klaviyo service, you must obtain an API key from your Klayivo account settings. The key must be assigned to KLAVIYO_API_KEY in your .env file. 
+
+## Usage
+
+Once installation is complete, you can send events to Klaviyo by creating standard Laravel notifications. For example:
+
+```php
+    namespace App\Notifications;
+
+    use Illuminate\Notifications\Notification;
+    use BrokenTitan\Klaviyo\Channels\KlaviyoChannel;
+    use BrokenTitan\Klaviyo\Messages\KlaviyoTrackMessage;
+    use DateTimeImmutable;
+
+    class UserCreated extends Notification {
+        /**
+         * Get the notification's delivery channels.
+         *
+         * @method via
+         * @param mixed $notifiable
+         * @return array
+         */
+        public function via($notifiable) {
+            return [KlaviyoChannel::class];
+        }
+
+        /**
+         * Sends the notification to Klaviyo.
+         * 
+         * @method toKlaviyo
+         * @param mixed $notifiable
+         * @return BrokenTitan\Klaviyo\Messages\KlaviyoTrackMessage
+         */
+        public function toKlaviyo($notifiable) : KlaviyoTrackMessage {
+            $customerProperties = ['$email' => $notifiable->getYourEmail()];
+            $properties = ['rma_id' => $notifiable->getRmaId()];
+
+            return new KlaviyoTrackMessage("User Created", $customerProperties, $properties, new DateTimeImmutable);
+        }
+    }   
+```
+
+There are multiple notification message types you may return in toKlayivo: KlaviyoTrackMessage, KlaviyoTrackOnceMessage, KlaviyoIdentifyMessage. Using one or the other will produce the appropriate event for Klaviyo. See the method parameters for the appropriate arguments to pass.
+
+## Testing
+
+``` bash
+$ composer test
+```
+
+## Security
+
+If you discover any security issues that would affect existing users, please email contact@broken-titan.com instead of using the issue tracker.
+
+## Contributing
+
+Feel free to contribute to the package.
+
+## Credits
+
+- [Klaviyo](https://github.com/klaviyo)
+- [All Contributors](../../contributors)
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
