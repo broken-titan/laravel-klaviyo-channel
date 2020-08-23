@@ -18,7 +18,7 @@ This package makes it easy to integrate Laravel with Klaviyo for sending notific
 
 Install this package with Composer:
 
-    composer require broken-titan/laravel-klayiyo-channel
+    composer require broken-titan/laravel-klaviyo-channel
 
 ## Configuration
 
@@ -28,7 +28,7 @@ Before you may begin using the Klaviyo service, you must obtain an API key from 
 
 Once installation is complete, you can send events to Klaviyo by creating standard Laravel notifications. For example:
 
-```php
+``` php
     namespace App\Notifications;
 
     use Illuminate\Notifications\Notification;
@@ -56,8 +56,8 @@ Once installation is complete, you can send events to Klaviyo by creating standa
          * @return BrokenTitan\Klaviyo\Messages\KlaviyoTrackMessage
          */
         public function toKlaviyo($notifiable) : KlaviyoTrackMessage {
-            $customerProperties = ['$email' => $notifiable->getYourEmail()];
-            $properties = ['rma_id' => $notifiable->getRmaId()];
+            $customerProperties = ['$email' => $notifiable->email];
+            $properties = ['user_id' => $notifiable->user_id];
 
             return new KlaviyoTrackMessage("User Created", $customerProperties, $properties, new DateTimeImmutable);
         }
