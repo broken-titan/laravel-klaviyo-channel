@@ -30,6 +30,11 @@
          */
         public function send($notifiable, Notification $notification) {
             $message = $notification->toKlaviyo($notifiable);
+            
+            /** Events sent within the same second may have the same default ID so we use the notification ID here. **/
+            if (empty($message->properties['$event_id'])) {
+                $message->properties['$event_id'] = $notification->id;
+            }
 
             switch (true) {
                 default:
