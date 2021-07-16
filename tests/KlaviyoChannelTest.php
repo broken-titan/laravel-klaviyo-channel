@@ -2,7 +2,7 @@
 
     namespace Tests;
 
-    use Klaviyo;
+    use Klaviyo\Klaviyo;
     use BrokenTitan\Klaviyo\Channels\KlaviyoChannel;
     use Mockery;
     use DateTimeInterface;
