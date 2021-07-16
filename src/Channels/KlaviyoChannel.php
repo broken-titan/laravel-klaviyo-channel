@@ -2,12 +2,11 @@
 
     namespace BrokenTitan\Klaviyo\Channels;
 
-    use Illuminate\Notifications\Notification as Notification;
-    use BrokenTitan\Klaviyo\Messages\KlaviyoTrackMessage;
-    use BrokenTitan\Klaviyo\Messages\KlaviyoTrackOnceMessage;
-    use BrokenTitan\Klaviyo\Messages\KlaviyoIdentifyMessage;
-    use Klaviyo;
-    use Exception;
+    use BrokenTitan\Klaviyo\Messages\{KlaviyoIdentifyMessage, KlaviyoTrackMessage};
+    use Illuminate\Notifications\Notification;
+    use Klaviyo\Klaviyo;
+    use Klaviyo\Exception\KlaviyoException;
+    use Klaviyo\Model\{EventModel, ProfileModel};
 
     class KlaviyoChannel {
         private Klaviyo $klaviyo;
@@ -38,15 +37,11 @@
 
             switch (true) {
                 default:
-                    throw new Exception("Klaviyo message type does not match a valid type of call.");
+                    throw new KlaviyoException("Klaviyo message type does not match a valid type of call.");
                     break;
 
                 case $message instanceof KlaviyoTrackMessage:
                     $result = $this->track($message);
-                    break;
-
-                case $message instanceof KlaviyoTrackOnceMessage:
-                    $result = $this->trackOnce($message);
                     break;
 
                 case $message instanceof KlaviyoIdentifyMessage:
@@ -65,16 +60,14 @@
          * @return bool
          */
         private function track(KlaviyoTrackMessage $message) : bool {
-            return $this->klaviyo->track($message->event, $message->customer_properties, $message->properties, $message->time);
-        }
+            $event = new EventModel([
+                "event" => $message->event,
+                "customer_properties" => $message->customer_properties,
+                "properties" => $message->properties,
+                "time" => $message->time
+            ]);
 
-        /**
-         * @method trackOnce
-         * @param BrokenTitan\Klaviyo\Messages\KlaviyoTrackOnceMessage
-         * @return bool
-         */
-        private function trackOnce(KlaviyoTrackOnceMessage $message) : bool {
-            return $this->klaviyo->track_once($message->event, $message->customer_properties, $message->properties, $message->time);
+            return $this->klaviyo->track($event);
         }
 
         /**
@@ -83,6 +76,8 @@
          * @return bool
          */
         private function identify(KlaviyoIdentifyMessage $message) : bool {
-            return $this->klaviyo->identify($message->properties);
+            $event = new ProfileModel($message->properties);
+
+            return $this->klaviyo->identify($event);
         }
     }

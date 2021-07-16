@@ -2,10 +2,9 @@
 
     namespace Tests;
 
-    use Klaviyo;
     use BrokenTitan\Klaviyo\Channels\KlaviyoChannel;
+    use Klaviyo\Klaviyo;
     use Mockery;
-    use DateTimeInterface;
 
     class KlaviyoChannelTest extends TestCase {
         protected $channel;
@@ -17,23 +16,14 @@
         }
 
         public function testSendTrackMessage() {
-            $message = ($notification = new TestNotification)->toKlaviyo($this->notifiable);
-            $this->klaviyo->shouldReceive("track")->withArgs(function($event, $customer_properties, $properties, $time) use ($message) {
-                $this->assertEquals($event, $message->event);
-                $this->assertEquals($customer_properties, $message->customer_properties);
-                $this->assertEquals($properties, $message->properties);
-                $this->assertEquals($time, $message->time);
-                return true;
-            })->once()->andReturn(true);
+            $message = ($notification = new TestEventNotification)->toKlaviyo($this->notifiable);
+            $this->klaviyo->shouldReceive("track")->once()->andReturn(true);
             $this->channel->send($this->notifiable, $notification);
         }
 
         public function testSendIdentifykMessage() {
-            $message = ($notification = new TestNotification)->toKlaviyo($this->notifiable);
-            $this->klaviyo->shouldReceive("track")->withArgs(function($event, $customer_properties, $properties, $time) use ($message) {
-                $this->assertEquals($properties, $message->properties);
-                return true;
-            })->once()->andReturn(true);
+            $message = ($notification = new TestIdentifyNotification)->toKlaviyo($this->notifiable);
+            $this->klaviyo->shouldReceive("identify")->once()->andReturn(true);
             $this->channel->send($this->notifiable, $notification);
         }
     }
