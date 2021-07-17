@@ -67,7 +67,7 @@
                 "time" => $message->time
             ]);
 
-            return $this->klaviyo->track($event);
+            return $this->klaviyo->publicAPI->track($event);
         }
 
         /**
@@ -78,6 +78,6 @@
         private function identify(KlaviyoIdentifyMessage $message) : bool {
             $event = new ProfileModel($message->properties);
 
-            return $this->klaviyo->identify($event);
+            return $this->klaviyo->publicAPI->identify($event);
         }
     }
