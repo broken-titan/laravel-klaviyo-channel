@@ -24,7 +24,7 @@
          * @return void
          */
         public function register() {
-            $this->app->singleton("Klaviyo", function($app) {
+            $this->app->singleton(Klaviyo::class, function($app) {
                 return new Klaviyo(config("klaviyo.key"), config("klaviyo.public_key"));
             });
         }

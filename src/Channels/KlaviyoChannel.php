@@ -39,7 +39,7 @@
 
             switch (true) {
                 default:
-                    throw new Exception("Klaviyo message type does not match a valid type of call.");
+                    throw new KlaviyoException("Klaviyo message type does not match a valid type of call.");
                     break;
 
                 case $message instanceof KlaviyoTrackMessage:
