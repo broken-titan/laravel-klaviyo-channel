@@ -3,16 +3,11 @@
 	namespace Tests;
 
 	use Illuminate\Notifications\Notification;
-	use Klaviyo\Model\EventModel as KlaviyoEvent;
+	use BrokenTitan\Klaviyo\Messages\KlaviyoTrackMessage;
 	use DateTimeImmutable;
 
 	class TestNotification extends Notification {
 		public function toKlaviyo($notifiable) {
-			return new KlaviyoEvent([
-                'event' => 'Test Notification',
-                'customer_properties' => ['$email' => 'test@test.com'], 
-                'properties' => ['event_id' => 'test_id'],
-                'time' => new DateTimeImmutable
-            ]);
+			return new KlaviyoTrackMessage("Test Notification", ['$email' => 'test@test.com'], ['event_id' => 'test_id'], new DateTimeImmutable);
         }
 	}
