@@ -4,7 +4,7 @@
 
     use Illuminate\Contracts\Support\DeferrableProvider;
     use Illuminate\Support\ServiceProvider as ServiceProvider;
-    use Klaviyo;
+    use Klaviyo\Klaviyo;
 
     class KlaviyoServiceProvider extends ServiceProvider implements DeferrableProvider {
         /**
@@ -25,7 +25,7 @@
          */
         public function register() {
             $this->app->singleton("Klaviyo", function($app) {
-                return new Klaviyo(config("klaviyo.key"));
+                return new Klaviyo(config("klaviyo.key"), config("klaviyo.public_key"));
             });
         }
 

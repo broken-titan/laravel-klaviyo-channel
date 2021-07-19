@@ -4,9 +4,10 @@
 
     use Illuminate\Notifications\Notification as Notification;
     use BrokenTitan\Klaviyo\Messages\KlaviyoTrackMessage;
-    use BrokenTitan\Klaviyo\Messages\KlaviyoTrackOnceMessage;
     use BrokenTitan\Klaviyo\Messages\KlaviyoIdentifyMessage;
-    use Klaviyo;
+    use Klaviyo\Klaviyo;
+    use Klaviyo\Model\EventModel as KlaviyoEvent;
+    use Klaviyo\Model\ProfileModel as KlaviyoProfile;
     use Exception;
 
     class KlaviyoChannel {
@@ -45,10 +46,6 @@
                     $result = $this->track($message);
                     break;
 
-                case $message instanceof KlaviyoTrackOnceMessage:
-                    $result = $this->trackOnce($message);
-                    break;
-
                 case $message instanceof KlaviyoIdentifyMessage:
                     $result = $this->identify($message);
                     break;
@@ -65,16 +62,14 @@
          * @return bool
          */
         private function track(KlaviyoTrackMessage $message) : bool {
-            return $this->klaviyo->track($message->event, $message->customer_properties, $message->properties, $message->time);
-        }
+            $event = new KlaviyoEvent([
+                'event' => $message->event,
+                'customer_properties' => $message->customer_properties, 
+                'properties' => $message->properties,
+                'time' => $message->time
+            ]);
 
-        /**
-         * @method trackOnce
-         * @param BrokenTitan\Klaviyo\Messages\KlaviyoTrackOnceMessage
-         * @return bool
-         */
-        private function trackOnce(KlaviyoTrackOnceMessage $message) : bool {
-            return $this->klaviyo->track_once($message->event, $message->customer_properties, $message->properties, $message->time);
+            return $this->klaviyo->publicAPI->track($event);
         }
 
         /**
@@ -83,6 +78,7 @@
          * @return bool
          */
         private function identify(KlaviyoIdentifyMessage $message) : bool {
-            return $this->klaviyo->identify($message->properties);
+            $profile = new KlaviyoProfile($message->properties);
+            return $this->klaviyo->publicAPI->track($profile);
         }
     }
