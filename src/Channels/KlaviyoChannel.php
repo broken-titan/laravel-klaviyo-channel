@@ -2,11 +2,13 @@
 
     namespace BrokenTitan\Klaviyo\Channels;
 
-    use BrokenTitan\Klaviyo\Messages\{KlaviyoIdentifyMessage, KlaviyoTrackMessage};
-    use Illuminate\Notifications\Notification;
+    use Illuminate\Notifications\Notification as Notification;
+    use BrokenTitan\Klaviyo\Messages\KlaviyoTrackMessage;
+    use BrokenTitan\Klaviyo\Messages\KlaviyoIdentifyMessage;
     use Klaviyo\Klaviyo;
-    use Klaviyo\Exception\KlaviyoException;
-    use Klaviyo\Model\{EventModel, ProfileModel};
+    use Klaviyo\Model\EventModel as KlaviyoEvent;
+    use Klaviyo\Model\ProfileModel as KlaviyoProfile;
+    use Exception;
 
     class KlaviyoChannel {
         private Klaviyo $klaviyo;
@@ -60,11 +62,11 @@
          * @return bool
          */
         private function track(KlaviyoTrackMessage $message) : bool {
-            $event = new EventModel([
-                "event" => $message->event,
-                "customer_properties" => $message->customer_properties,
-                "properties" => $message->properties,
-                "time" => $message->time
+            $event = new KlaviyoEvent([
+                'event' => $message->event,
+                'customer_properties' => $message->customer_properties, 
+                'properties' => $message->properties,
+                'time' => $message->time
             ]);
 
             return $this->klaviyo->publicAPI->track($event);
@@ -76,8 +78,7 @@
          * @return bool
          */
         private function identify(KlaviyoIdentifyMessage $message) : bool {
-            $event = new ProfileModel($message->properties);
-
-            return $this->klaviyo->publicAPI->identify($event);
+            $profile = new KlaviyoProfile($message->properties);
+            return $this->klaviyo->publicAPI->track($profile);
         }
     }
