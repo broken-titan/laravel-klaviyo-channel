@@ -7,7 +7,7 @@
 	class KlaviyoTrackMessage extends KlaviyoMessage {
 		public string $event;
 		public array $customer_properties;
-		public ?string $time;
+		public ?int $time;
 
 		/**
 	     * @method create
