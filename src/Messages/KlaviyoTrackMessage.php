@@ -32,6 +32,6 @@
 			$this->event = $event;
 			$this->customer_properties = $customer_properties;
 			$this->properties = $properties;
-			$this->time = $time ? $time->format("U") : null;
+			$this->time = $time ? $time->format(DateTimeInterface::W3C) : null;
 		}
 	}
