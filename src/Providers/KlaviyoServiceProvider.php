@@ -16,6 +16,8 @@
             $this->publishes([
                 __DIR__ . "/../../config/klaviyo.php" => config_path("klaviyo.php")
             ], "config");
+            
+            $this->mergeConfigFrom(__DIR__.'/../../config/klaviyo.php', 'klaviyo');
         }
 
         /**
