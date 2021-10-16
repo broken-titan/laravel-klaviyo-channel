@@ -1,6 +1,6 @@
 # Laravel Klaviyo Notification Channel
 
-This package makes it easy to integrate Laravel with Klaviyo for sending notifications.
+This package makes it easy to integrate Laravel with Klaviyo for sending notifications via a channel.
 
 ## Contents
 
@@ -22,7 +22,9 @@ Install this package with Composer:
 
 ## Configuration
 
-Before you may begin using the Klaviyo service, you must obtain an API key from your Klayivo account settings. The key must be assigned to KLAVIYO_API_KEY in your .env file. 
+Before you may begin using the Klaviyo service, you must obtain a private and public API key from your Klayivo account settings. The key must be assigned to KLAVIYO_API_KEY and KLAVIYO_API_PUBLIC_KEY in your .env file.
+
+You should also publish the config file that will generate klaviyo.php in your config folder.
 
 ## Usage
 
